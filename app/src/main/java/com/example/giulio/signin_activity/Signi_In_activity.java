@@ -30,6 +30,10 @@ public class Signi_In_activity extends AppCompatActivity implements DBConnection
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        btn_register = (Button) findViewById(R.id.btn_signin_check);
+
+        btn_register.setOnClickListener(this);
+
 
     }
 
@@ -40,19 +44,21 @@ public class Signi_In_activity extends AppCompatActivity implements DBConnection
         int id = v.getId();
 
         switch (id) {
-            case R.id.btn_login_verify:
-                onClickLogin();
+            case R.id.btn_signin_check:
+                onClickRegister();
                 break;
 
 
         }
     }
 
-    public void onClickLogin () {
-        progressDialog = new ProgressDialog(LoginActivity.this);
+    public void onClickRegister () {
+        progressDialog = new ProgressDialog(Signi_In_activity.this);
         progressDialog.setMessage("Please Wait");
         progressDialog.show();
         connections = 0;
+        t = Toast.makeText(this,"Stica",Toast.LENGTH_SHORT);
+        t.show();
         connect();
     }
 
@@ -61,37 +67,47 @@ public class Signi_In_activity extends AppCompatActivity implements DBConnection
         connections++;
 
         //final TextView textView = (TextView) findViewById(R.id.logresult);
-        final EditText editlog = (EditText) findViewById(R.id.username);
-        final EditText editpass = (EditText) findViewById(R.id.password);
+        final EditText editlog = (EditText) findViewById(R.id.username_signin);
+        final EditText editpass = (EditText) findViewById(R.id.pwd_signin);
+        final EditText editsesso = (EditText) findViewById(R.id.pwd_signin_ver);
 
 
 
-        if (! editlog.getText().toString().equals("") && ! editpass.getText().toString().equals("")) {
+        if (! editlog.getText().toString().equals("") && ! editpass.getText().toString().equals("")
+                && !editsesso.getText().toString().equals("")) {
 
-            t = Toast.makeText(this,"Insert username and password",Toast.LENGTH_SHORT);
-            new ConnectDB(this).execute("login", editlog.getText().toString(),
-                    editpass.getText().toString());
+
+            new ConnectDB(this).execute("register", editlog.getText().toString(),
+                    editpass.getText().toString(), editsesso.getText().toString());
         } else {
-            t = Toast.makeText(this,"Insert username and password",Toast.LENGTH_SHORT);
+            t = Toast.makeText(this,"Fill in the form",Toast.LENGTH_SHORT);
+            t.show();
             //textView.setText("Insert username and password");
         }
     }
+
     public void onTaskCompleted (ArrayList<String> ls) {
 
-        final TextView textView = (TextView) findViewById(R.id.username);
+        //final TextView textView = (TextView) findViewById(R.id.username_signin);
 
         if (connections >= 5) {                     // Provo la connessione 5 volte, altrimenti do errore di connessione
             t = Toast.makeText(this,result,Toast.LENGTH_SHORT);
+            t.show();
             return;
         }
 
         ListIterator it = ls.listIterator();
         while (it.hasNext()) {
+            t = Toast.makeText(this,"Iterate " + result,Toast.LENGTH_SHORT);
+            t.show();
             result = result + (it.next());
         }
 
 
-        if (!result.equals("Login avvenuto con successo") && !result.equals("Wrong Password") &&
+        t = Toast.makeText(this,result,Toast.LENGTH_SHORT);
+        t.show();
+        progressDialog.dismiss();
+       /* if (!result.equals("Login avvenuto con successo") && !result.equals("Wrong Password") &&
                 !result.equals("Registrati")) {
             result = "";
             t = Toast.makeText(this,result,Toast.LENGTH_SHORT);
@@ -102,7 +118,7 @@ public class Signi_In_activity extends AppCompatActivity implements DBConnection
             t.show();
             //textView.setText(result);
             if (progressDialog.isShowing()) { progressDialog.dismiss(); }
-        }
+        }*/
 
         result = "";
 
@@ -111,4 +127,4 @@ public class Signi_In_activity extends AppCompatActivity implements DBConnection
 }
 
 
-}
+

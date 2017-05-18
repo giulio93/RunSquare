@@ -98,7 +98,7 @@
         android:text="Confirm_Password" />
 
     <Button
-        android:id="@+id/btn_signin_verify"
+        android:id="@+id/btn_signin_check"
         android:layout_width="190dp"
         android:layout_height="wrap_content"
         android:text="@string/btn_Register"
